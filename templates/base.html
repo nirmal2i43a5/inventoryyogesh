@@ -8,6 +8,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
   <title>{{ school_name | default:"MySchool" }}</title>
+<!--  <link href="{% static 'dist/css/style.css' %}" rel="stylesheet" />-->
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
@@ -38,12 +39,6 @@
         <li class="nav-item d-none d-sm-inline-block">
           <a href="{% url 'home' %} " class="nav-link"><i class="fa fa-home"></i></a>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
-          <a href="{% url 'current-session' %}" class="nav-link">Session: {{ current_session }}</a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-          <a href="{% url 'current-session' %}" class="nav-link">Term: {{ current_term }}</a>
-        </li>
       </ul>
 
 
@@ -65,10 +60,6 @@
             </a>
           </div>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" data-widget="control-sidebar" data-slide="true"
-            href="#" role="button"><i class="fas fa-th-large"></i></a>
-        </li>
       </ul>
     </nav>
     <!-- /.navbar -->
@@ -85,111 +76,43 @@
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column"
             data-widget="treeview" role="menu" data-accordion="false">
+            <li class="nav-header">Inventory</li>
             <li class="nav-item">
-              <a href="{% url 'student-list' %}" class="nav-link">
+              <a href="{% url 'inventory_list' %}" class="nav-link">
                 <i class="nav-icon fas fa-graduation-cap"></i>
                 <p>
-                  Students
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'staff-list' %}" class="nav-link">
-                <i class="nav-icon fas fa-users"></i>
-                <p>
-                  Member of Staff
+                  Category
                 </p>
               </a>
             </li>
 
-            <li class="nav-header">Finance</li>
-            <li class="nav-item">
-              <a href="{% url 'invoice-list' %}" class="nav-link">
+
+                        <li class="nav-item">
+              <a href="{% url 'supplier-list' %}" class="nav-link">
                 <i class="nav-icon fas fa-money-bill-alt"></i>
                 <p>
-                  Invoices
-                </p>
-              </a>
-            </li>
-            <li class="nav-header">Results</li>
-            <li class="nav-item">
-              <a href="{% url 'create-result' %}" class="nav-link">
-                <i class="nav-icon fas fa-money-bill-alt"></i>
-                <p>
-                  Create Results
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'edit-results' %}" class="nav-link">
-                <i class="nav-icon fas fa-money-bill-alt"></i>
-                <p>
-                  Update Results
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'view-results' %}" class="nav-link">
-                <i class="nav-icon fas fa-money-bill-alt"></i>
-                <p>
-                  View Results
+                  Supplier
                 </p>
               </a>
             </li>
 
-            <li class="nav-header">Others</li>
-            <li class="nav-item has-treeview">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-copy"></i>
+                  <li class="nav-item">
+              <a href="{% url 'sales-list' %}" class="nav-link">
+                <i class="nav-icon fas fa-store"></i>
                 <p>
-                  Management
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="{% url 'sessions' %}" class="nav-link">
-                    <i class="nav-icon fas fa-bars"></i>
-                    <p>
-                      Sessions
-                    </p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'terms' %}" class="nav-link">
-                    <i class="nav-icon fas fa-bars"></i>
-                    <p>
-                      Terms
-                      <i class="right"></i>
-                    </p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'subjects' %}" class="nav-link">
-                    <i class="nav-icon fas fa-bars"></i>
-                    <p>
-                      Subjects
-                    </p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'classes' %}" class="nav-link">
-                    <i class="nav-icon fas fa-bars"></i>
-                    <p>
-                      Classes
-                    </p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'configs' %}" class="nav-link">
-                <i class="nav-icon fas fa-cog"></i>
-                <p>
-                  Settings
+                  Sales
                 </p>
               </a>
             </li>
+                     <li class="nav-item">
+              <a href="" class="nav-link">
+                <i class="nav-icon fas fa-undo"></i>
+                <p>
+                  Sales Return
+                </p>
+              </a>
+            </li>
+
 
 
           </ul>
@@ -260,6 +183,8 @@
   <!-- ./wrapper -->
 
   <!-- REQUIRED SCRIPTS -->
+  <script src="{% static 'dist/js/scripts.js' %}"></script>
+
   <!-- jQuery -->
   <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'dist/js/jquery.formset.js' %}"> </script>
