@@ -24,13 +24,7 @@ class SalesCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = "sales/sales_form.html"
     fields = '__all__'
     success_message = "New sales successfully added."
-    # success_url = 'sales-list'
-    # def get_form(self):
-    #         form = super(SalesCreateView, self).get_form()
-    #         form.fields['total_price'].widget = widgets.HiddenInput()
-    #         form.fields['email'].widget = widgets.EmailInput()
-    #         form.fields['phone_no'].widget = widgets.NumberInput()
-    #         return form
+
     def get_context_data(self, **kwargs):
         data = super(SalesCreateView, self).get_context_data(**kwargs)
         if self.request.POST:
@@ -43,19 +37,42 @@ class SalesCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         context = self.get_context_data()
         items = context['items']
         with transaction.atomic():
-            self.object = form.save()
             if items.is_valid():
-                items.instance = self.object
-                items.save()
+                items.instance = form.save(commit=False)
+                for i in items:
+                    prod = i.cleaned_data['product']
+                    product=prod.product
+                    qt=i.cleaned_data['quantity']
+                    sold_item=Product.objects.get(product=product)
+                    if sold_item.Quantity < qt:
+                        form.errors['value']='Your entered quantity exceeds inventory quantity'
+                        return self.form_invalid(form)
+                    else:
+                        sold_item.Quantity -=qt
+                        sold_item.save()
+                        form.save()
+                        items.save()
+                # sold_item.save()
 
         return super(SalesCreateView, self).form_valid(form)
 
     def get_initial(self):
         initial=super(SalesCreateView,self).get_initial()
         initial['customer']=Customer.objects.get(pk=self.kwargs['pk'])
-        # initial['sale_code']=Customer.objects.get(sale_code=self.kwargs['sale_code'])
-
         return initial
+    #
+    # def post(self, request, pk):
+    #     # sold_item = Product.objects.get(id=pk)
+    #     sales_form = SaleItemFormset(request.POST)
+    #     if sales_form.is_valid():
+    #         new_sale = sales_form.save(commit=False)
+    #         new_sale.save()
+    #         # To keep track of the stock remaining after sales
+    #         # sold_quantity = int(request.POST['quantity'])
+    #         # sold_item.Quantity -= sold_quantity
+    #         # sold_item.save()
+    #         return redirect('sales-list')b265p0lm
+
 
 # def ProductSale(request, pk):
 #     sold_item = Product.objects.get(id=pk)
@@ -176,3 +193,62 @@ def SalesUpdateView(request, sales_id):
     return render(request, 'sales/sales_update.html', {'form':form, 'formset' : formset})
 
 
+def sales_return_list(request):
+    sales=Sales.objects.all().order_by('-id')
+    return render(request,'sales/sales_return_list.html',{'sales':sales})
+
+def existing_customer_list(request):
+    sales=Customer.objects.all()
+    return render(request,'sales/existing_customer.html',{'sales':sales})
+
+
+class existing_sales_create(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Sales
+    template_name = "sales/sales_form.html"
+    fields = '__all__'
+    success_message = "New sales successfully added."
+
+    def get_context_data(self, **kwargs):
+        data = super(existing_sales_create, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data['items'] = SaleItemFormset(self.request.POST)
+        else:
+            data['items'] = SaleItemFormset()
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        items = context['items']
+        with transaction.atomic():
+            self.object = form.save()
+            if items.is_valid():
+                items.instance = self.object
+                items.save()
+
+        return super(existing_sales_create, self).form_valid(form)
+
+    def get_initial(self):
+        initial = super(existing_sales_create, self).get_initial()
+        initial['customer'] = Customer.objects.get(pk=self.kwargs['pk'])
+        return initial
+
+
+def SalesReturnView(request, sales_id):
+    sale = Sales.objects.get(id=sales_id)
+    form = SaleForm(request.POST, instance=sale)
+    ItemFormset = inlineformset_factory(Sales, SalesItem, form=SaleForm, extra=0)
+
+    if request.method == 'POST':
+        formset = ItemFormset(request.POST, instance=sale)
+
+        if formset.is_valid():
+            form.save()
+            formset.save()
+            from django.contrib import messages
+            messages.success(request, 'Order successfully updated')
+    else:
+
+        form = SaleForm(instance=sale)
+        formset = ItemFormset(instance=sale)
+
+    return render(request, 'sales/sales_return_update.html', {'form':form, 'formset' : formset})

@@ -22,7 +22,7 @@
       <tbody>
 
         {% for supp in supplier %}
-          <tr class='clickable-row' data-href="#">
+          <tr class='clickable-row' data-href="{% url 'supplier-detail' supp.id %}">
             <td>{{ forloop.counter}}</td>
             <td>{{ supp.name}}</td>
             <td>{{ supp.address}}</td>

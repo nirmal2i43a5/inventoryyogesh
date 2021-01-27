@@ -19,4 +19,4 @@ class SaleItemForm(ModelForm):
         fields=['product','quantity']
 
 
-SaleItemFormset=inlineformset_factory(Sales,SalesItem, form=SaleItemForm)
+SaleItemFormset=inlineformset_factory(Sales,SalesItem, form=SaleItemForm,extra=2)

@@ -1,13 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}Inventory{% endblock title %}
+{% block title %}Sales Return{% endblock title %}
 
 {% block breadcrumb %}
-<a class="btn btn-secondary" href="{% url 'existing-customer-list' %}"><i
-    class="fas fa-plus"></i>Existing Customer</a>
-<a class="btn btn-primary" href="{% url 'sale-item' %}"><i
-    class="fas fa-plus"></i> New sales</a>
-
 {% endblock breadcrumb %}
 
 {% block content %}
@@ -17,20 +12,16 @@
         <tr>
           <th>S/N</th>
           <th>Name</th>
-          <th>Total order</th>
-          <th>Total Price</th>
-
-
+          <th> Date</th>
         </tr>
       </thead>
       <tbody>
 
         {% for sale in sales %}
-          <tr class='clickable-row' data-href="{% url 'sales_details' sale.id %}">
+          <tr class='clickable-row' data-href="{% url 'sales-return' sale.id %}">
             <td>{{ forloop.counter}}</td>
             <td>{{ sale.customer}}</td>
-            <td>{{sale.total_qty}}</td>
-            <td>{{sale.total_order}}</td>
+            <td>{{ sale.date}}</td>
 
           </tr>
         {% endfor %}

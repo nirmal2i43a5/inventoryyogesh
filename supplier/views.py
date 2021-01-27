@@ -5,7 +5,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.forms import widgets
 from django.urls import reverse_lazy
-
+from django.views.generic import DetailView
+from Inventory.models import *
 from .models import Supplier
 @login_required
 def supplier_list(request):
@@ -48,3 +49,11 @@ class SupplierDeleteView(LoginRequiredMixin, DeleteView):
     model = Supplier
     template_name = "supplier/supplier_confirm_delete.html"
     success_url = reverse_lazy('supplier-list')
+
+class SupplierDetailView(LoginRequiredMixin, DetailView):
+    model = Product
+    template_name = "inventory/supplier_detail.html"
+    def get_context_data(self, **kwargs):
+        context = super(SupplierDetailView, self).get_context_data(**kwargs)
+        return context
+

@@ -4,12 +4,6 @@ import uuid
 from supplier.models import Supplier
 
 class Product(models.Model):
-    # CHOICES=[
-    #     ('kg','kg'),
-    #     ('dozen','dozen'),
-    #     ('none','none')
-    # ]
-
     id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     product_code=models.CharField(max_length=40, null=True, blank=True)
     product = models.CharField(max_length=200)
