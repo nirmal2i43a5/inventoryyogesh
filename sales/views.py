@@ -42,6 +42,7 @@ class SalesCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
                 for i in items:
                     prod = i.cleaned_data['product']
                     product=prod.product
+                    print(prod)
                     qt=i.cleaned_data['quantity']
                     sold_item=Product.objects.get(product=product)
                     if sold_item.Quantity < qt:
@@ -220,10 +221,25 @@ class existing_sales_create(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         context = self.get_context_data()
         items = context['items']
         with transaction.atomic():
-            self.object = form.save()
             if items.is_valid():
-                items.instance = self.object
-                items.save()
+                items.instance = form.save(commit=False)
+                for i in items:
+                    prod = i.cleaned_data['product']
+                    product=prod.product
+                    print(prod)
+                    qt=i.cleaned_data['quantity']
+                    sold_item=Product.objects.get(product=product)
+                    if sold_item.Quantity > qt:
+                        sold_item.Quantity -= qt
+                        sold_item.save()
+                        form.save()
+                        items.save()
+                    else:
+                        form.errors['value'] = 'Your entered quantity exceeds inventory quantity'
+                        return self.form_invalid(form)
+
+
+
 
         return super(existing_sales_create, self).form_valid(form)
 

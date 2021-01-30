@@ -13,7 +13,7 @@ SECRET_KEY = '__$1ud47e&nyso5h5o3fwnqu4+hfqcply9h$k*h2s34)hn5@nc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -46,6 +46,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     # 'corecode.middleware.SiteWideConfigs',
 ]
 
@@ -138,3 +139,4 @@ LOGIN_REDIRECT_URL = '/'
 
 LOGOUT_REDIRECT_URL = '/'
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

@@ -14,7 +14,7 @@
 
 {% block content %}
 
-<form action="" method="POST" enctype="multipart/form-data">
+<form  action="" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
 
   {% for field in form %}
@@ -33,12 +33,13 @@
 	  {% endif %}
   </label>
 
-  <div class="col-sm-9">
+  <div id="form-container" class="col-sm-9">
     {{ field | add_class:"form-control"}}
     {% if field.help_text %}
     <small>{{ field.help_text|safe }}</small>
     {% endif %}
-	  {{ items.management_form }}
+
+
 
 		<table class="table">
 		    {{ items.management_form }}
@@ -54,24 +55,27 @@
 			    </tr>
 			    </thead>
 			{% endif %}
-			<tr class="formset_row">
+			<tbody >
+			<tr class="formset_row" >
 			    {% for field in form.visible_fields %}
 				<td>
-				    {# Include the hidden fields in the form #}
-<!--				    {% if forloop.first %}-->
-<!--					{% for hidden in form.hidden_fields %}-->
-<!--					    {{ hidden }}-->
-<!--					{% endfor %}-->
-<!--				    {% endif %}-->
+				    {% if forloop.first %}
+					{% for hidden in form.hidden_fields %}
+					    {{ hidden }}
+					{% endfor %}
+				    {% endif %}
 				    {{ field.errors.as_ul }}
-				    {{ field | add_class:"form-control" }}
-
+					{{ field | add_class:"form-control" }}
 				</td>
+
 			    {% endfor %}
 			</tr>
+
+			</tbody>
 		    {% endfor %}
 		</table>
-	  <button href="#" class="clickme" >Click me</button>
+			<button id="add-form" type="button" class="btn btn-primary">Add Row</button>
+
 	</div>
 
 </div>
@@ -92,19 +96,27 @@
 
   {% block morejs %}
 <script src="{% static 'dist/js/formset/jquery.formset.js' %}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
-<script type="text/javascript">
-
-    $('.formset_row').formset({
-	addText: '<button class="btn btn-warning">Add item </button>',
-        deleteText: 'remove',
-        prefix: 'items'
-
-    });
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>-->
+<script>
+		let birdForm = document.querySelectorAll(".formset_row")
+        let container = document.querySelector("#form-container")
+        let addButton = document.querySelector("#add-form")
+        let totalForms = document.querySelector("#id_salesitem_set-TOTAL_FORMS")
 
 
-$('select').select2()
+        let formNum = birdForm.length-1
+        addButton.addEventListener('click', addForm)
+
+        function addForm(e){
+            e.preventDefault()
+            let newForm = birdForm[0].cloneNode(true)
+            let formRegex = RegExp(`salesitem_set-(\\d){1}-`,'g')
+            formNum++
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `salesitem_set-${formNum}-`)
+            container.insertBefore(newForm, addButton)
+            totalForms.setAttribute('value', `${formNum+1}`)
+        }
+
 </script>
 
   {% endblock morejs %}
-
